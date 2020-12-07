@@ -47,7 +47,7 @@ def main():
     if START_YEAR < 0 or END_YEAR < 0:
         raise Exception("Only positive year integers are allowed.")
     if START_YEAR > 2100 or END_YEAR > 2100:
-        raise Exception("I think where are not there yet, buddy.")
+        raise Exception("I think we are not there yet, buddy.")
     if START_YEAR > END_YEAR:
         raise Exception("End year cannot be greater than start year.")
 
