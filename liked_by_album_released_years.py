@@ -75,7 +75,7 @@ def main():
     created_playlist = spotify_client.user_playlist_create(
         user=spotify_client.me()['id'],
         name=f"My tracks {START_YEAR}-{END_YEAR}",
-        description="Auto generated with my scripts"    
+        description="Auto generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
     )
     if not created_playlist:
         raise Exception("Failed to create a playlist.")
