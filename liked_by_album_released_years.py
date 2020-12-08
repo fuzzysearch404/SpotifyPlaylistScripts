@@ -3,12 +3,14 @@ import spotipy
 import secrets as user_secrets
 from spotipy.oauth2 import SpotifyOAuth
 
+
 PERMISSIONS_SCOPE = 'user-library-read playlist-modify-public'
 
 START_YEAR, END_YEAR = -1, -1
 
 # Track stats
 FILTERED, ADDED, SKIPPED = 0, 0, 0
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='Creates a playlist for user.', add_help=True)
@@ -29,7 +31,7 @@ def track_should_be_added(track):
     
     return year >= START_YEAR and year <= END_YEAR
 
-def add_tracks_to_list(to_add, results):
+def filter_tracks_to_list(to_add, results):
     global FILTERED, SKIPPED
 
     for item in results['items']:
@@ -84,10 +86,10 @@ def main():
         print(f"Sending a request to Spotify to add {len(to_add)} tracks.")
         spotify_client.playlist_add_items(created_playlist['id'], to_add)
     
-    add_tracks_to_list(to_add, results)
+    filter_tracks_to_list(to_add, results)
     while results['next']:
         results = spotify_client.next(results)
-        add_tracks_to_list(to_add, results)
+        filter_tracks_to_list(to_add, results)
 
         # Limit list of songs to be added at a time to about 50 from max 100.
         if len(to_add) >= 50:
