@@ -11,11 +11,11 @@ START_YEAR, END_YEAR = -1, -1
 FILTERED, ADDED, SKIPPED = 0, 0, 0
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Creates a playlist for user', add_help=True)
+    parser = argparse.ArgumentParser(description='Creates a playlist for user.', add_help=True)
     parser.add_argument('-s', '--start-year', required=True, type=int,
-                        help='Starting year for liked songs to filter')
+                        help='Starting release year for liked songs to filter. Required.')
     parser.add_argument('-e', '--end-year', required=True, type=int,
-                        help='Ending year for liked songs to filter')
+                        help='Ending release year for liked songs to filter. Required.')
     return parser.parse_args()
 
 def track_should_be_added(track):
@@ -47,7 +47,7 @@ def main():
     if START_YEAR < 0 or END_YEAR < 0:
         raise Exception("Only positive year integers are allowed.")
     if START_YEAR > 2100 or END_YEAR > 2100:
-        raise Exception("I think we are not there yet, buddy.")
+        raise Exception("I think that we are not there yet, buddy.")
     if START_YEAR > END_YEAR:
         raise Exception("End year cannot be greater than start year.")
 
@@ -67,14 +67,14 @@ def main():
     created_playlist = spotify_client.user_playlist_create(
         user=spotify_client.me()['id'],
         name=f"My tracks {START_YEAR}-{END_YEAR}",
-        description="Auto generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
+        description="Automatically generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
     )
     if not created_playlist:
         raise Exception("Failed to create a playlist.")
 
     print(f"Playlist created. ID:{created_playlist['id']}")
 
-    results = spotify_client.current_user_saved_tracks()
+    results = spotify_client.current_user_saved_tracks(limit=50)
     if not results:
         raise Exception("Failed to load liked songs or user has no liked songs.")
 
