@@ -11,20 +11,18 @@ Create a new Spotify web application at https://developer.spotify.com.
 Create a `secrets.py` Python file as per example `secrets_example.py`.
 
 ## Custom playlist scripts
-#### Liked songs by album release years:
+### Liked songs by album release years:
 `liked_by_album_released_years.py` - Generates a playlist from your liked songs, 
 of songs that are released in specific years. For example:
 songs that have been released in a time period between 2005 and 2018.  
 **Arguments:**  
 `-s` or `--start-year` - Starting release year for liked songs to filter. Required.  
 `-e` or `--end-year` - Ending release year for liked songs to filter. Required.  
-#### Liked songs by audio features:
+### Liked songs by audio features:
 `liked_by_audio_features.py` - Generates a playlist from your liked songs,
 of songs that meet criteria by audio feature filters you set. For example:
 songs that are above tempo 120 BPM, below 200 BPM and valance is above 0.65.  
 **Available filter flags (Using atleast one is mandatory):**  
-**For detailed parameter descriptions use `-h` or `--help` flag, or visit official Spotify API reference:  
-https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/**  
 `-a` or `--min-acousticness` - Min. value for acousticness. (float 0.0 - 1.0)  
 `-ma` or `--max-acousticness` - Max. value for acousticness. (float 0.0 - 1.0)  
 `-d` or `--min-danceability` - Min. value for danceability. (float 0.0 - 1.0)  
@@ -49,3 +47,5 @@ https://developer.spotify.com/documentation/web-api/reference/tracks/get-several
 `-mts` or `--max-time_signature` - Max. value for time_signature. (int)  
 `-v` or `--min-valence` - Min. value for valance. (float 0.0 - 1.0)  
 `-mv` or `--max-valence` - Max. value for valance. (float 0.0 - 1.0)  
+**For detailed parameter descriptions use `-h` or `--help` flag, or visit official Spotify API reference:  
+https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/**  
