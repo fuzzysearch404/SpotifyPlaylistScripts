@@ -141,7 +141,7 @@ def main():
         client_id=user_secrets.CLIENT_ID,
         client_secret=user_secrets.CLIENT_SECRET,
         redirect_uri=user_secrets.REDIRECT_URI,
-        open_browser=True
+        open_browser=False
     )
     spotify_client = spotipy.Spotify(auth_manager=authorization)
     if not spotify_client.me():
