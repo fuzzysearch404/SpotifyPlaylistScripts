@@ -6,7 +6,7 @@ from spotipy.oauth2 import SpotifyOAuth
 
 PERMISSIONS_SCOPE = 'user-library-read playlist-modify-public'
 
-FILTERS = None
+FILTERS_AND_ARGS = None
 
 # Track stats
 FILTERED, ADDED, SKIPPED = 0, 0, 0
@@ -14,6 +14,8 @@ FILTERED, ADDED, SKIPPED = 0, 0, 0
 
 def get_args():
     parser = argparse.ArgumentParser(description='Creates a playlist for user.', add_help=True)
+    parser.add_argument('-p', '--playlist-id', type=str,
+                        help='Specify a custom playlist ID, instead of using liked songs playlist.')
     # Argument descriptions source: 
     # https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/
     parser.add_argument('-a', '--min-acousticness', type=float,
@@ -96,7 +98,7 @@ def track_should_be_added(track_audio_features):
     if not track_audio_features:
         return False
 
-    for key, value in FILTERS.items():
+    for key, value in FILTERS_AND_ARGS.items():
         split_filter_key = key.split("_") # e.g. min_tempo.
         try: # Get the actual audio feature value that was received.
             actual_value = track_audio_features[split_filter_key[1]]
@@ -124,7 +126,7 @@ def filter_tracks_to_list(to_add, results):
             SKIPPED += 1
 
 def request_audio_features(spotify_client, results):
-    to_request = [x['track']['id'] for x in results['items']]
+    to_request = [x['track']['id'] for x in results['items'] if x['track']['id'] is not None]
     if to_request:
         return spotify_client.audio_features(tracks=to_request)
 
@@ -133,8 +135,14 @@ def request_audio_features(spotify_client, results):
 def main():
     global FILTERED, ADDED, SKIPPED
 
-    if not FILTERS:
-        raise Exception("No filters specified.")
+    try:
+        custom_playlist_id = FILTERS_AND_ARGS['playlist_id']
+    except KeyError:
+        custom_playlist_id = False
+
+    # TODO: If there would be more options that are not filters, this should be reworked.
+    if not FILTERS_AND_ARGS or len(FILTERS_AND_ARGS) == 1 and custom_playlist_id:
+        raise Exception("Usage of atleast one filter is required to generate the playlist.")
 
     authorization = SpotifyOAuth(
         scope=PERMISSIONS_SCOPE,
@@ -149,23 +157,29 @@ def main():
 
     print(f"Authorized as: {spotify_client.me()['display_name']}")
 
-    used_flags = "".join(f"{filter}:{value}, " for filter, value in FILTERS.items())
+    used_flags = "".join(f"{filter}:{value}, " for filter, value in FILTERS_AND_ARGS.items())
     print(f"Using audio feature flags: {used_flags[:-2]}")
 
     created_playlist = spotify_client.user_playlist_create(
         user=spotify_client.me()['id'],
         name=f"My filtered playlist",
         description="Automatically generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
-        f" | Used flags: {used_flags[:-2]}."
+        f" | Used flags: {used_flags[:-2]}."[:300] # Description char limit: 300
     )
     if not created_playlist:
         raise Exception("Failed to create a playlist.")
 
     print(f"Playlist created. ID:{created_playlist['id']}")
 
-    results = spotify_client.current_user_saved_tracks(limit=50)
+    if not custom_playlist_id:
+        print("No playlist ID provided - defaulting to saved (liked) tracks")
+        results = spotify_client.current_user_saved_tracks(limit=50)
+    else:
+        print(f"Using custom playlist. ID: {custom_playlist_id}")
+        results = spotify_client.playlist_items(custom_playlist_id, limit=50) 
+    
     if not results:
-        raise Exception("Failed to load liked songs or user has no liked songs.")
+        raise Exception("Failed to load playlist or playlist has no songs.")
 
     to_add = []
 
@@ -194,6 +208,6 @@ def main():
 if __name__ == '__main__':
     args = get_args()
     # Remove args where value is None.
-    FILTERS = dict([x for x in args.__dict__.items() if x[1] is not None])
+    FILTERS_AND_ARGS = dict([x for x in args.__dict__.items() if x[1] is not None])
     
     main()

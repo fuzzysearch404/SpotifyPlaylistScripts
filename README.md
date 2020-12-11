@@ -18,10 +18,12 @@ songs that have been released in a time period between 2005 and 2018.
 **Arguments:**  
 `-s` or `--start-year` - Starting release year for liked songs to filter. Required.  
 `-e` or `--end-year` - Ending release year for liked songs to filter. Required.  
-### Liked songs by audio features:
-`liked_by_audio_features.py` - Generates a playlist from your liked songs,
+### Songs by audio features:
+`by_audio_features.py` - Generates a playlist from your liked songs (or other playlist, if you specify it),
 of songs that meet criteria by audio feature filters you set. For example:
 songs that are above tempo 120 BPM, below 200 BPM and valance is above 0.65.  
+**Optional arguments:**  
+`-p` or `--playlist-id` - Specify a custom playlist by playlist ID, instead of using liked songs playlist.
 **Available filter flags (Using atleast one is mandatory):**  
 `-a` or `--min-acousticness` - Min. value for acousticness. (float 0.0 - 1.0)  
 `-ma` or `--max-acousticness` - Max. value for acousticness. (float 0.0 - 1.0)  
