@@ -61,13 +61,14 @@ def main():
         open_browser=False
     )
     spotify_client = spotipy.Spotify(auth_manager=authorization)
-    if not spotify_client.me():
+    current_user = spotify_client.me()
+    if not spotify_client or not current_user:
         raise Exception("Failed to authorize app client or user.")
 
-    print(f"Authorized as: {spotify_client.me()['display_name']}")
+    print(f"Authorized as: {current_user['display_name']}")
 
     created_playlist = spotify_client.user_playlist_create(
-        user=spotify_client.me()['id'],
+        user=current_user['id'],
         name=f"My tracks {START_YEAR}-{END_YEAR}",
         description="Automatically generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
     )
