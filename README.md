@@ -54,7 +54,7 @@ using liked songs playlist.
 **For detailed parameter descriptions use `-h` or `--help` flag, 
 or visit official Spotify API reference:  
 https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/**  
-## Other playlist scripts:  
+## Other playlist scripts  
 ### Delete tracks from all playlists:  
 `delete_tracks_from_all_playlists.py` - Deletes ALL occurences of specified songs
 from ALL your created playlists. (except they are not removed from saved (liked) songs).  
