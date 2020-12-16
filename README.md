@@ -1,16 +1,16 @@
 Custom Spotify playlist Python scripts for my personal uses.
 
-## Requirements
+## Requirements  
 https://github.com/plamere/spotipy
 ```
 pip install spotipy
 ```
 
-## Setup
+## Setup  
 Create a new Spotify web application at https://developer.spotify.com. 
 Create a `secrets.py` Python file as per example `secrets_example.py`.
 
-## Custom playlist scripts
+## Custom playlist generation scripts  
 ### Liked songs by album release years:
 `liked_by_album_released_years.py` - Generates a playlist from your liked songs, 
 of songs that are released in specific years. For example:
@@ -19,11 +19,13 @@ songs that have been released in a time period between 2005 and 2018.
 `-s` or `--start-year` - Starting release year for liked songs to filter. Required.  
 `-e` or `--end-year` - Ending release year for liked songs to filter. Required.  
 ### Songs by audio features:
-`by_audio_features.py` - Generates a playlist from your liked songs (or other playlist, if you specify it),
-of songs that meet criteria by audio feature filters you set. For example:
-songs that are above tempo 120 BPM, below 200 BPM and valance is above 0.65.  
+`by_audio_features.py` - Generates a playlist from your liked songs 
+(or other playlist, if you specify it), of songs that meet criteria by audio feature 
+filters you set. For example: songs that are above tempo 120 BPM, 
+below 200 BPM and valance is above 0.65.  
 **Optional arguments:**  
-`-p` or `--playlist-id` - Specify a custom playlist by playlist ID, instead of using liked songs playlist.  
+`-p` or `--playlist-id` - Specify a custom playlist by playlist ID, instead of 
+using liked songs playlist.  
 **Available filter flags (Using atleast one is mandatory):**  
 `-a` or `--min-acousticness` - Min. value for acousticness. (float 0.0 - 1.0)  
 `-ma` or `--max-acousticness` - Max. value for acousticness. (float 0.0 - 1.0)  
@@ -49,5 +51,15 @@ songs that are above tempo 120 BPM, below 200 BPM and valance is above 0.65.
 `-mts` or `--max-time_signature` - Max. value for time_signature. (int)  
 `-v` or `--min-valence` - Min. value for valance. (float 0.0 - 1.0)  
 `-mv` or `--max-valence` - Max. value for valance. (float 0.0 - 1.0)  
-**For detailed parameter descriptions use `-h` or `--help` flag, or visit official Spotify API reference:  
+**For detailed parameter descriptions use `-h` or `--help` flag, 
+or visit official Spotify API reference:  
 https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/**  
+## Other playlist scripts:  
+### Delete tracks from all playlists:  
+`delete_tracks_from_all_playlists.py` - Deletes ALL occurences of specified songs
+from ALL your created playlists. (except they are not removed from saved (liked) songs).  
+**Arguments:**  
+`track_ids` - A list of track ID's, seperated by a whitespace, to delete. Atleast one track ID is mandatory.  
+**Optional arguments:**  
+`-i` or `--ignore-playlists` - A list of playlist ID's, seperated by a whitespace, to skip and 
+not delete the tracks from.  
