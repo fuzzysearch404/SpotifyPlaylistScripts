@@ -18,9 +18,10 @@ def get_args():
                         help='Playlist IDs of playlists that will be ignored.')
     return parser.parse_args()
 
+
 def main():
     if not TRACK_IDS:
-        raise Exception("Atleasst one track ID is required.")
+        raise Exception("Atleast one track ID is required.")
 
     authorization = SpotifyOAuth(
         scope=PERMISSIONS_SCOPE,

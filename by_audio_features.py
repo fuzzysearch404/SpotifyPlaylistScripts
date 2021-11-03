@@ -16,7 +16,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Creates a playlist for user.', add_help=True)
     parser.add_argument('-p', '--playlist-id', type=str,
                         help='Specify a custom playlist ID, instead of using liked songs playlist.')
-    # Argument descriptions source: 
+    # Argument descriptions source:
     # https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/
     parser.add_argument('-a', '--min-acousticness', type=float,
                         help='Min. value. A confidence measure from 0.0 to 1.0 of whether the track is acoustic. '
@@ -94,16 +94,17 @@ def get_args():
 
     return parser.parse_args()
 
+
 def track_should_be_added(track_audio_features):
     if not track_audio_features:
         return False
 
     for key, value in FILTERS_AND_ARGS.items():
-        split_filter_key = key.split("_") # e.g. min_tempo.
-        try: # Get the actual audio feature value that was received.
+        split_filter_key = key.split("_")  # e.g. min_tempo.
+        try:  # Get the actual audio feature value that was received.
             actual_value = track_audio_features[split_filter_key[1]]
         except KeyError:
-            return False # TODO: Maybe rather continue?
+            return False  # TODO: Maybe rather continue?
 
         if split_filter_key[0] == "min":
             if actual_value < value:
@@ -111,8 +112,9 @@ def track_should_be_added(track_audio_features):
         elif split_filter_key[0] == "max":
             if actual_value > value:
                 return False
-    
+
     return True
+
 
 def filter_tracks_to_list(to_add, results):
     global FILTERED, SKIPPED
@@ -125,12 +127,14 @@ def filter_tracks_to_list(to_add, results):
         else:
             SKIPPED += 1
 
+
 def request_audio_features(spotify_client, results):
     to_request = [x['track']['id'] for x in results['items'] if x['track']['id'] is not None]
     if to_request:
         return spotify_client.audio_features(tracks=to_request)
 
     return None
+
 
 def main():
     global FILTERED, ADDED, SKIPPED
@@ -163,9 +167,9 @@ def main():
 
     created_playlist = spotify_client.user_playlist_create(
         user=current_user['id'],
-        name=f"My filtered playlist",
+        name="My filtered playlist",
         description="Automatically generated with https://github.com/fuzzysearch404/SpotifyPlaylistScripts"
-        f" | Used flags: {used_flags[:-2]}."[:300] # Description char limit: 300
+        f" | Used flags: {used_flags[:-2]}."[:300]  # Description char limit: 300
     )
     if not created_playlist:
         raise Exception("Failed to create a playlist.")
@@ -178,7 +182,7 @@ def main():
     else:
         print(f"Using custom playlist. ID: {custom_playlist_id}")
         results = spotify_client.playlist_items(custom_playlist_id, limit=50) 
-    
+
     if not results:
         raise Exception("Failed to load playlist or playlist has no songs.")
 
@@ -206,9 +210,10 @@ def main():
     print("Done.")
     print(f"Filtered: {FILTERED}, Added: {ADDED}, Skipped: {SKIPPED}")
 
+
 if __name__ == '__main__':
     args = get_args()
     # Remove args where value is None.
     FILTERS_AND_ARGS = dict([x for x in args.__dict__.items() if x[1] is not None])
-    
+
     main()

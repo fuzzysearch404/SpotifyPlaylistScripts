@@ -20,6 +20,7 @@ def get_args():
                         help='Ending release year for liked songs to filter. Required.')
     return parser.parse_args()
 
+
 def track_should_be_added(track):
     album = track['album']
     date_unparsed = album["release_date"]
@@ -28,8 +29,9 @@ def track_should_be_added(track):
         year = int(date_unparsed.split("-")[0]) # Expected formats: 2020-01-01, 2020-01, 2020
     except Exception:
         return False
-    
+
     return year >= START_YEAR and year <= END_YEAR
+
 
 def filter_tracks_to_list(to_add, results):
     global FILTERED, SKIPPED
@@ -42,6 +44,7 @@ def filter_tracks_to_list(to_add, results):
             to_add.append(track['id'])
         else:
             SKIPPED += 1
+
 
 def main():
     global FILTERED, ADDED, SKIPPED
@@ -86,7 +89,7 @@ def main():
     def add_tracks_to_spotify_playlist():
         print(f"Sending a request to Spotify to add {len(to_add)} tracks.")
         spotify_client.playlist_add_items(created_playlist['id'], to_add)
-    
+
     filter_tracks_to_list(to_add, results)
     while results['next']:
         results = spotify_client.next(results)
@@ -104,6 +107,7 @@ def main():
 
     print("Done.")
     print(f"Filtered: {FILTERED}, Added: {ADDED}, Skipped: {SKIPPED}")
+
 
 if __name__ == '__main__':
     args = get_args()
